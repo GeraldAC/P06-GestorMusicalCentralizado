@@ -20,22 +20,26 @@ El historial musical personal se fragmenta entre Shazam, marcadores del navegado
 
 ## Arquitectura
 
-```
-[Fuentes de entrada]
-  Archivos CSV/HTML  ──►  ETL Script
-  Telegram Bot       ──►  FastAPI Webhook
-                              │
-                              ▼
-                     [tabla: sources]  ←── estado: pending
-                              │
-                              ▼
-                     Celery Worker  ──►  Spotify API
-                              │
-                              ▼
-                     [tablas: tracks, artists]
-                              │
-                              ▼
-                     FastAPI REST  ──►  React Dashboard
+```mermaid
+---
+config:
+  layout: elk
+  look: neo
+  theme: redux
+---
+flowchart TB
+ subgraph Fuentes_de_entrada["Fuentes_de_entrada"]
+        A["Archivos CSV/HTML"]
+        B["Telegram Bot"]
+  end
+    A --> C["ETL Script"]
+    E[["tabla: sources"]] --> F["Celery Worker"]
+    F --> n3["Spotify API"] & H[["tablas: tracks, artists"]]
+    H --> I["FastAPI REST"]
+    I --> J["React Dashboard"]
+    B --> D["FastAPI Webhook"]
+    D --> E
+    n2["Estado: Pending"] --> E
 ```
 
 ## Inicio Rápido
