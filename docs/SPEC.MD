@@ -26,13 +26,13 @@ El sistema sigue un patrón **ETL + API + Worker**, desacoplado mediante una col
 
 ## 3. Fuentes de Datos
 
-| Fuente | Formato | Parser | Mecanismo de obtención |
-|---|---|---|---|
-| YouTube / web | HTML | `bookmarks.py` | Exportación de marcadores del navegador |
-| Shazam | CSV | `shazam.py` | App → Exportar historial |
-| Spotify | JSON | `spotify_gdpr.py` | Exportify (OAuth oficial) o GDPR export |
-| Manual (SoundCloud, Bandcamp, radios, etc.) | TXT | `txt_manual.py` | Archivos propios, formato `Artista - Título` |
-| Telegram | Webhook HTTP | API webhook | Bot recibe mensajes en tiempo real |
+| Fuente                                      | Formato      | Parser            | Mecanismo de obtención                       |
+| ------------------------------------------- | ------------ | ----------------- | -------------------------------------------- |
+| YouTube / web                               | HTML         | `bookmarks.py`    | Exportación de marcadores del navegador      |
+| Shazam                                      | CSV          | `shazam.py`       | App → Exportar historial                     |
+| Spotify                                     | JSON         | `spotify_gdpr.py` | Exportify (OAuth oficial) o GDPR export      |
+| Manual (SoundCloud, Bandcamp, radios, etc.) | TXT          | `txt_manual.py`   | Archivos propios, formato `Artista - Título` |
+| Telegram                                    | Webhook HTTP | API webhook       | Bot recibe mensajes en tiempo real           |
 
 ---
 
@@ -42,44 +42,44 @@ El sistema sigue un patrón **ETL + API + Worker**, desacoplado mediante una col
 
 Registro crudo de cualquier entrada al sistema, independiente de su origen.
 
-| Columna | Tipo | Descripción |
-|---|---|---|
-| `id` | UUID PK | Identificador único |
-| `raw_text` | TEXT | Texto o URL original recibida |
-| `source_type` | ENUM | `shazam`, `bookmark`, `spotify`, `txt`, `telegram` |
-| `status` | ENUM | `pending`, `processed`, `failed`, `manual_review` |
-| `created_at` | TIMESTAMPTZ | Fecha de ingesta |
-| `processed_at` | TIMESTAMPTZ | Fecha de procesamiento (nullable) |
-| `error_detail` | TEXT | Descripción del error si `status = failed` |
+| Columna        | Tipo        | Descripción                                        |
+| -------------- | ----------- | -------------------------------------------------- |
+| `id`           | UUID PK     | Identificador único                                |
+| `raw_text`     | TEXT        | Texto o URL original recibida                      |
+| `source_type`  | ENUM        | `shazam`, `bookmark`, `spotify`, `txt`, `telegram` |
+| `status`       | ENUM        | `pending`, `processed`, `failed`, `manual_review`  |
+| `created_at`   | TIMESTAMPTZ | Fecha de ingesta                                   |
+| `processed_at` | TIMESTAMPTZ | Fecha de procesamiento (nullable)                  |
+| `error_detail` | TEXT        | Descripción del error si `status = failed`         |
 
 ### Tabla: `artists`
 
-| Columna | Tipo | Descripción |
-|---|---|---|
-| `id` | UUID PK | |
-| `mbid` | VARCHAR UNIQUE | MusicBrainz Artist ID (nullable si no se encontró) |
-| `name` | VARCHAR NOT NULL | Nombre canónico según MusicBrainz |
-| `created_at` | TIMESTAMPTZ | |
+| Columna      | Tipo             | Descripción                                        |
+| ------------ | ---------------- | -------------------------------------------------- |
+| `id`         | UUID PK          |                                                    |
+| `mbid`       | VARCHAR UNIQUE   | MusicBrainz Artist ID (nullable si no se encontró) |
+| `name`       | VARCHAR NOT NULL | Nombre canónico según MusicBrainz                  |
+| `created_at` | TIMESTAMPTZ      |                                                    |
 
 ### Tabla: `tracks`
 
-| Columna | Tipo | Descripción |
-|---|---|---|
-| `id` | UUID PK | |
-| `source_id` | UUID FK → sources | Origen del registro |
-| `mbid` | VARCHAR UNIQUE | MusicBrainz Recording ID (nullable) |
-| `title` | VARCHAR NOT NULL | Título canónico |
-| `album` | VARCHAR | |
-| `album_cover_url` | TEXT | URL de portada (obtenida vía Last.fm) |
-| `duration_ms` | INTEGER | |
-| `genres` | VARCHAR[] | Array de géneros obtenidos de Last.fm |
-| `created_at` | TIMESTAMPTZ | |
+| Columna           | Tipo              | Descripción                           |
+| ----------------- | ----------------- | ------------------------------------- |
+| `id`              | UUID PK           |                                       |
+| `source_id`       | UUID FK → sources | Origen del registro                   |
+| `mbid`            | VARCHAR UNIQUE    | MusicBrainz Recording ID (nullable)   |
+| `title`           | VARCHAR NOT NULL  | Título canónico                       |
+| `album`           | VARCHAR           |                                       |
+| `album_cover_url` | TEXT              | URL de portada (obtenida vía Last.fm) |
+| `duration_ms`     | INTEGER           |                                       |
+| `genres`          | VARCHAR[]         | Array de géneros obtenidos de Last.fm |
+| `created_at`      | TIMESTAMPTZ       |                                       |
 
 ### Tabla: `track_artists` (relación N:M)
 
-| Columna | Tipo |
-|---|---|
-| `track_id` | UUID FK → tracks |
+| Columna     | Tipo              |
+| ----------- | ----------------- |
+| `track_id`  | UUID FK → tracks  |
 | `artist_id` | UUID FK → artists |
 
 ---
@@ -88,15 +88,15 @@ Registro crudo de cualquier entrada al sistema, independiente de su origen.
 
 Base URL: `/api/v1`
 
-| Método | Ruta | Descripción |
-|---|---|---|
-| `GET` | `/health` | Health check del servicio |
-| `GET` | `/tracks` | Lista paginada de tracks procesados |
-| `GET` | `/tracks/{id}` | Detalle de un track |
-| `GET` | `/artists` | Lista paginada de artistas |
-| `GET` | `/sources/pending` | Entradas pendientes de procesamiento |
-| `GET` | `/sources/failed` | Entradas con error o revisión manual |
-| `POST` | `/webhook/telegram` | Receptor de mensajes del bot |
+| Método | Ruta                | Descripción                          |
+| ------ | ------------------- | ------------------------------------ |
+| `GET`  | `/health`           | Health check del servicio            |
+| `GET`  | `/tracks`           | Lista paginada de tracks procesados  |
+| `GET`  | `/tracks/{id}`      | Detalle de un track                  |
+| `GET`  | `/artists`          | Lista paginada de artistas           |
+| `GET`  | `/sources/pending`  | Entradas pendientes de procesamiento |
+| `GET`  | `/sources/failed`   | Entradas con error o revisión manual |
+| `POST` | `/webhook/telegram` | Receptor de mensajes del bot         |
 
 ### Paginación estándar
 
@@ -113,6 +113,7 @@ MusicBrainz es una base de datos musical comunitaria y abierta. No requiere aute
 Se usa la librería oficial `musicbrainzngs` que gestiona el rate limiting automáticamente.
 
 **Configuración obligatoria:**
+
 ```python
 musicbrainzngs.set_useragent("gmc", "0.1.0", "contacto@email.com")
 ```
@@ -122,6 +123,7 @@ musicbrainzngs.set_useragent("gmc", "0.1.0", "contacto@email.com")
 **Campos extraídos:** `id` (MBID), `title`, `length` (duración en ms), `release-list[0].title` (álbum), `artist-credit[].artist.id`, `artist-credit[].artist.name`.
 
 **Manejo de errores:**
+
 - Sin resultados → `status = manual_review`
 - `ResponseError` / timeout → `status = failed`, registrar `error_detail`
 - Rate limit inherente: el worker procesa las tareas secuencialmente para respetar 1 req/s
@@ -131,16 +133,18 @@ musicbrainzngs.set_useragent("gmc", "0.1.0", "contacto@email.com")
 Last.fm complementa a MusicBrainz con etiquetas de género (folksonomy) y URLs de imágenes de álbum. Requiere API key gratuita.
 
 **Endpoints utilizados:**
+
 - `track.getInfo` → géneros (tags), URL de portada del álbum
 - `artist.getInfo` → tags del artista como fallback de género
 
 **Manejo de errores:**
+
 - Track no encontrado → géneros vacíos, `album_cover_url = null` (no bloquea el procesamiento)
 - `error 29` (rate limit) → retry con backoff exponencial (Celery retry)
 
 ### Flujo de enriquecimiento combinado
 
-```
+```plaintext
 source (pending)
     │
     ▼
@@ -186,7 +190,7 @@ El bot recibe cualquier mensaje de texto. Si el texto contiene una URL reconocid
 ### `txt_manual.py` (TXT)
 
 - Formato esperado: una entrada por línea, `Artista - Título` o `Título - Artista`.
-- Intenta separar por ` - `; si hay ambigüedad, guarda la línea completa como `raw_text` para que MusicBrainz resuelva.
+- Intenta separar por `-`; si hay ambigüedad, guarda la línea completa como `raw_text` para que MusicBrainz resuelva.
 - Ignora líneas en blanco y líneas que comiencen con `#` (comentarios).
 
 ---

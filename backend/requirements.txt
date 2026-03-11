@@ -1,0 +1,25 @@
+# API
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# Base de datos
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+alembic==1.13.1
+
+# Worker asíncrono
+celery==5.4.0
+redis==5.0.4
+
+# Clientes de enriquecimiento
+musicbrainzngs==0.7.1
+httpx==0.27.0          # cliente HTTP async para Last.fm y Telegram
+
+# ETL / parsers
+beautifulsoup4==4.12.3
+pandas==2.2.2
+
+# Utilidades
+python-dotenv==1.0.1   # solo para scripts que corren fuera de Docker

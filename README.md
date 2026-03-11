@@ -8,16 +8,16 @@ El historial musical personal se fragmenta entre Shazam, marcadores del navegado
 
 ## Stack Tecnológico
 
-| Capa | Tecnología |
-|---|---|
-| Backend API | Python 3.10+ · FastAPI · SQLAlchemy |
-| Base de datos | PostgreSQL 15 |
-| Procesamiento asíncrono | Celery · Redis |
-| Frontend | React · Vite · Tailwind CSS |
-| Ingestión continua | Telegram Bot API |
-| Enriquecimiento (principal) | MusicBrainz API · `musicbrainzngs` |
-| Enriquecimiento (géneros) | Last.fm API |
-| Infraestructura local | Docker · Docker Compose |
+| Capa                        | Tecnología                          |
+| --------------------------- | ----------------------------------- |
+| Backend API                 | Python 3.10+ · FastAPI · SQLAlchemy |
+| Base de datos               | PostgreSQL 15                       |
+| Procesamiento asíncrono     | Celery · Redis                      |
+| Frontend                    | React · Vite · Tailwind CSS         |
+| Ingestión continua          | Telegram Bot API                    |
+| Enriquecimiento (principal) | MusicBrainz API · `musicbrainzngs`  |
+| Enriquecimiento (géneros)   | Last.fm API                         |
+| Infraestructura local       | Docker · Docker Compose             |
 
 ## Arquitectura
 
@@ -86,7 +86,7 @@ flowchart TB
 
 ```bash
 git clone https://github.com/GeraldAC/P06-GestorMusicalCentralizado.git
-cd gmc
+cd P06-GestorMusicalCentralizado
 cp .env.example .env   # Completar con tus credenciales
 docker compose up -d
 ```
@@ -97,7 +97,7 @@ docker compose up -d
 # .env.example
 POSTGRES_USER=
 POSTGRES_PASSWORD=
-POSTGRES_DB=gmc
+POSTGRES_DB=gmc_db
 
 REDIS_URL=redis://redis:6379/0
 
@@ -134,7 +134,7 @@ docker compose exec api python -m etl.parsers.txt_manual --file data/canciones.t
 
 ## Estructura del Proyecto
 
-```
+```bash
 P06-GestorMusicalCentralizado/
 ├── backend/
 │   ├── api/            # Routers FastAPI
@@ -158,24 +158,24 @@ P06-GestorMusicalCentralizado/
 
 ## Obtención de datos históricos
 
-| Fuente | Mecanismo de exportación |
-|---|---|
-| YouTube (bookmarks) | Exportar marcadores del navegador como HTML |
-| Shazam | App → Perfil → Exportar historial (CSV) |
-| Spotify favorites | [Exportify](https://exportify.app) → CSV limpio vía OAuth oficial |
-| TXT manual | Archivos propios con líneas `Artista - Título` |
+| Fuente              | Mecanismo de exportación                                          |
+| ------------------- | ----------------------------------------------------------------- |
+| YouTube (bookmarks) | Exportar marcadores del navegador como HTML                       |
+| Shazam              | App → Perfil → Exportar historial (CSV)                           |
+| Spotify favorites   | [Exportify](https://exportify.app) → CSV limpio vía OAuth oficial |
+| TXT manual          | Archivos propios con líneas `Artista - Título`                    |
 
 > **Nota sobre Spotify:** La exportación GDPR oficial (solicitada desde la cuenta) es la fuente preferida cuando esté disponible. Exportify es la alternativa inmediata y legítima mientras llega.
 
 ## Estado del Proyecto
 
-| Fase | Descripción | Estado |
-|---|---|---|
-| 1 | Infraestructura y modelado | ▣ Pendiente |
-| 2 | ETL histórico y API base | ▣ Pendiente |
-| 3 | MusicBrainz + Last.fm + Celery | ▣ Pendiente |
-| 4 | Telegram Bot | ▣ Pendiente |
-| 5 | Frontend Dashboard | ▣ Pendiente |
+| Fase | Descripción                    | Estado      |
+| ---- | ------------------------------ | ----------- |
+| 1    | Infraestructura y modelado     | ▣ Pendiente |
+| 2    | ETL histórico y API base       | ▣ Pendiente |
+| 3    | MusicBrainz + Last.fm + Celery | ▣ Pendiente |
+| 4    | Telegram Bot                   | ▣ Pendiente |
+| 5    | Frontend Dashboard             | ▣ Pendiente |
 
 ## Licencia
 

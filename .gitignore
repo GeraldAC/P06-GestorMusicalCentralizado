@@ -1,0 +1,26 @@
+# Entorno
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Datos de ingesta (archivos personales, no van al repo)
+data/
+
+# Alembic generados localmente (solo las revisiones van al repo)
+# migrations/versions/ sí va al repo — no lo ignores
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
