@@ -30,7 +30,7 @@ El sistema sigue un patrón **ETL + API + Worker**, desacoplado mediante una col
 | ------------------------------------------- | ------------ | ----------------- | -------------------------------------------- |
 | YouTube / web                               | HTML         | `bookmarks.py`    | Exportación de marcadores del navegador      |
 | Shazam                                      | CSV          | `shazam.py`       | App → Exportar historial                     |
-| Spotify                                     | JSON         | `spotify_gdpr.py` | Exportify (OAuth oficial) o GDPR export      |
+| Spotify                                     | CSV          | `spotify_gdpr.py` | Exportify (OAuth oficial)                    |
 | Manual (SoundCloud, Bandcamp, radios, etc.) | TXT          | `txt_manual.py`   | Archivos propios, formato `Artista - Título` |
 | Telegram                                    | Webhook HTTP | API webhook       | Bot recibe mensajes en tiempo real           |
 
@@ -42,15 +42,15 @@ El sistema sigue un patrón **ETL + API + Worker**, desacoplado mediante una col
 
 Registro crudo de cualquier entrada al sistema, independiente de su origen.
 
-| Columna        | Tipo        | Descripción                                        |
-| -------------- | ----------- | -------------------------------------------------- |
-| `id`           | UUID PK     | Identificador único                                |
-| `raw_text`     | TEXT        | Texto o URL original recibida                      |
-| `source_type`  | ENUM        | `shazam`, `bookmark`, `spotify`, `txt`, `telegram` |
-| `status`       | ENUM        | `pending`, `processed`, `failed`, `manual_review`  |
-| `created_at`   | TIMESTAMPTZ | Fecha de ingesta                                   |
-| `processed_at` | TIMESTAMPTZ | Fecha de procesamiento (nullable)                  |
-| `error_detail` | TEXT        | Descripción del error si `status = failed`         |
+| Columna        | Tipo        | Descripción                                             |
+| -------------- | ----------- | ------------------------------------------------------- |
+| `id`           | UUID PK     | Identificador único                                     |
+| `raw_text`     | TEXT        | Texto o URL original recibida                           |
+| `source_type`  | ENUM        | `shazam`, `bookmark`, `spotify`, `txt`, `new_discovery` |
+| `status`       | ENUM        | `pending`, `processed`, `failed`, `manual_review`       |
+| `created_at`   | TIMESTAMPTZ | Fecha de ingesta                                        |
+| `processed_at` | TIMESTAMPTZ | Fecha de procesamiento (nullable)                       |
+| `error_detail` | TEXT        | Descripción del error si `status = failed`              |
 
 ### Tabla: `artists`
 
